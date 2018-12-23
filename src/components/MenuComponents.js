@@ -1,55 +1,28 @@
-import React, { Component } from 'react';
-import { Navbar, NavbarBrand, Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
-import Dishdetail from './DishdetailComponent'; 
+import React from 'react';
+import {  Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
 
-class Menu extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectDish: null
-        };
-    }
-    onDishSelect(dishes) {
-        this.setState({
-            selectDish: dishes
-        });
-    }
-    render() {
-        //each return item add to list menu is least
-        const menu = this.props.dises.map((dis) => {
-            return (
-                <div key={dis.id} className="col-12 col-md-5 m-1">
 
-                    <Card onClick={() => this.onDishSelect(dis)}>
-                        <CardImg width="100%" src={dis.image} alt={dis.name} />
-                        <CardImgOverlay>
-                            <CardTitle>{dis.name}</CardTitle>
-                        </CardImgOverlay>
-                    </Card>
-                </div>
-                );
-        });
+function RanderMenu({ dish, onClick }) {
+    //console.log(arguments);
+    return (
+            <Card onClick={() => onClick(dish.id)}>
+                    <CardImg width="100%" src={dish.image} alt={dish.name} />
+                    <CardImgOverlay>
+                        <CardTitle>{dish.name}</CardTitle>
+                    </CardImgOverlay>
+            </Card>
+    );
+   
+}
+
+const Menu = (props) => {
+    const menu = props.dises.map((dis) => {
         return (
-            <div>
-            <Navbar light color="primary">
-                <div className="container">
-                    <NavbarBrand href="/">
-                        Mahesh Siyag
-                    </NavbarBrand>
-                </div>
-            </Navbar>
-            <div className="container" >
-                <div className="row">
-                    
-                        {menu}
-                        
-                  </div>
-                    <Dishdetail dishes={this.state.selectDish} />  
-                                            
+            <div key={dis.id} className="col-12 col-md-5 m-1">
+                <RanderMenu dish={dis} onClick={props.onClick} />
             </div>
-            </div>
-            
         );
-    };
+    });
+    return (<div className="row">{menu}</div>);
 }
 export default Menu;
