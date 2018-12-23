@@ -3,7 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from './MenuComponents';
 import Dishdetail from './DishdetailComponent';
 import { DISHES } from '../shared/dishes';
-import { Navbar, NavbarBrand } from 'reactstrap';
+//import { Navbar, NavbarBrand } from 'reactstrap';
+import Header from './HeaderComponent';
+import Footer from './FooterComponent';
 
 class Main extends Component {
     constructor(props) {
@@ -36,17 +38,12 @@ class Main extends Component {
         //console.log("rander");
         return (
             <div>
-                    <Navbar light color="primary">
-                        <div className="container">
-                            <NavbarBrand href="/">
-                                Mahesh Siyag
-                    </NavbarBrand>
-                        </div>
-                    </Navbar>
+                <Header/>
                     <div className="container" >
                     <Menu dises={DISHES} onClick={(dish) => { this.onDishSelect(dish) }} />
                     <Dishdetail dishes={DISHES.filter((dish) => dish.id === this.state.selectDish)[0]} />
-                    </div>
+                </div>
+                <Footer />
             </div>
         );
     }
