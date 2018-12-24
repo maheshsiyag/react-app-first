@@ -6,12 +6,23 @@ import { DISHES } from '../shared/dishes';
 //import { Navbar, NavbarBrand } from 'reactstrap';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
+import { Switch, Redirect, Route } from 'react-router-dom';
+import  About  from './AboutComponents';
+import  Contact  from './ContactUsComponents';
+import Home from './HomeComponents';
+import { COMMENTS } from '../shared/comments';
+import { LEADERS } from '../shared/leaders';
+import { PROMOTIONS } from '../shared/promotions';
 
 class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedDish: null
+            selectedDish: null,
+            leaders: LEADERS,
+            promotions: PROMOTIONS,
+            dishes: DISHES,
+            comments: COMMENTS
         };
     }
     onDishSelect(dishes) {
@@ -19,34 +30,35 @@ class Main extends Component {
             selectDish: dishes
         });
     }
-    /*componentDidMount() {
-        console.log("component did mount main");
-    }
-    componentDidUpdate() {
-        console.log("componentDidUpdate main");
-    }
-    componentWillMount() {
-        console.log("componentWillMount");
-    }
-    componentWillUpdate() {
-        console.log("componentWillUpdate");
-    }
-    componentWillUnmount() {
-        console.log("componentWillUnmount");
-    }*/
     render() {
-        //console.log("rander");
+        const HomePage = () => {
+            const feature = this.state.dishes.filter((dish) => dish.featured);
+            const leaders = this.state.leaders.filter((lider) => lider.featured);
+            const promo = this.state.promotions.filter((prmotion) => prmotion.featured);
+            return (<Home dishes={feature[0]} leaders={leaders[0]} prmotion={promo[0]} />);
+        }
+        const DishWithId = ({ match }) => {
+            return (<Dishdetail dish={this.state.dishes.filter((dis) => dis.id === parseInt(match.params.dishId, 10))[0]} comment={this.state.comments.filter((commnts) => commnts.dishId === parseInt(match.params.dishId, 10))} />);
+        }
         return (
             <div>
-                <Header/>
-                    <div className="container" >
-                    <Menu dises={DISHES} onClick={(dish) => { this.onDishSelect(dish) }} />
-                    <Dishdetail dishes={DISHES.filter((dish) => dish.id === this.state.selectDish)[0]} />
-                </div>
+                <Header />
+                <Switch>
+                    <Route path='/home' component={HomePage} />
+                    <Route path='/aboutus' component={() => <About leaders={this.state.leaders} />} />
+                    <Route path='/contactus' component={Contact} />
+                    <Route exact path='/menu' component={() => <Menu dises={this.state.dishes} />} />
+                    <Route path='/menu/:dishId' component={DishWithId} />
+                    <Redirect to='/home' />
+                </Switch>
+                    
                 <Footer />
             </div>
         );
     }
 }
+//<div className="container" >
+//<Dishdetail dishes={DISHES.filter((dish) => dish.id === this.state.selectDish)[0]} />
+//                </div >
 export default Main;
 
