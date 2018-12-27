@@ -15,11 +15,16 @@ class CommentForm extends Component {
             isModalOpen: false
         };
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     toggleModal() {
         this.setState({
             isModalOpen: !this.state.isModalOpen
         });
+    }
+    handleSubmit(value) {
+        this.props.addComment(this.props.dishId, value.rating, value.author, value.comment);
+        this.toggleModal();
     }
     render() {
         return (
@@ -28,7 +33,7 @@ class CommentForm extends Component {
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                     <ModalBody>
-                        <LocalForm>
+                        <LocalForm onSubmit={(value) => this.handleSubmit(value)} >
                             <Row className="form-group">
                                 <Label htmlFor="rating" md={12} >Rating</Label>
                                 <Col md={12}>
@@ -63,7 +68,7 @@ class CommentForm extends Component {
                             <Row className="form-group">
                                 <Label htmlFor="comment" md={12}>Comment</Label>
                                 <Col md={12}>
-                                    <Control.textarea model="comment" id="comment" name="comment" rows="6" className="form-control"  />
+                                    <Control.textarea model=".comment" id="comment" name="comment" rows="6" className="form-control"  />
                                 </Col>
                             </Row>
                             <Row className="form-group">
@@ -96,7 +101,7 @@ function RenderDish({ dish }) {
     }
 }
 
-function RenderComments({ comment }) {
+function RenderComments({ comment, addComment, dishId }) {
     const cooms = comment.map((coment) => {
         return (
             <div key={coment.id} >
@@ -110,7 +115,7 @@ function RenderComments({ comment }) {
             <div>
                 <h4>Comments</h4>
                 <ul className="list-unstyled">{cooms}</ul>
-                <CommentForm/>
+                <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         );
     else
@@ -147,8 +152,8 @@ const Dishdetail = (props) => {
                         <RenderDish dish={props.dish} />
                     </Card>
                 </div>
-                <div className="col-12 col-md-5 m-1">
-                    <RenderComments comment={props.comment} />
+                    <div className="col-12 col-md-5 m-1">
+                        <RenderComments comment={props.comment} addComment={props.addComment} dishId={props.dish.id} />
                 </div>
                 </div>
             </div>

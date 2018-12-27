@@ -10,6 +10,7 @@ import  About  from './AboutComponents';
 import  Contact  from './ContactUsComponents';
 import Home from './HomeComponents';
 import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -19,6 +20,10 @@ const mapStateToProps = state => {
         leaders: state.leaders
     }
 }
+const mapDispatchToProps = dispatch => ({
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+   
+});
 
 class Main extends Component {
     constructor(props) {
@@ -40,7 +45,7 @@ class Main extends Component {
             return (<Home dishes={feature[0]} leaders={leaders[0]} prmotion={promo[0]} />);
         }
         const DishWithId = ({ match }) => {
-            return (<Dishdetail dish={this.props.dishes.filter((dis) => dis.id === parseInt(match.params.dishId, 10))[0]} comment={this.props.comments.filter((commnts) => commnts.dishId === parseInt(match.params.dishId, 10))} />);
+            return (<Dishdetail dish={this.props.dishes.filter((dis) => dis.id === parseInt(match.params.dishId, 10))[0]} comment={this.props.comments.filter((commnts) => commnts.dishId === parseInt(match.params.dishId, 10))} addComment={this.props.addComment}  />);
         }
         return (
             <div>
@@ -50,7 +55,7 @@ class Main extends Component {
                     <Route path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
                     <Route path='/contactus' component={Contact} />
                     <Route exact path='/menu' component={() => <Menu dises={this.props.dishes} />} />
-                    <Route path='/menu/:dishId' component={DishWithId} />
+                    <Route path='/menu/:dishId' component={DishWithId}  />
                     <Redirect to='/home' />
                 </Switch>
                     
@@ -62,5 +67,5 @@ class Main extends Component {
 //<div className="container" >
 //<Dishdetail dishes={DISHES.filter((dish) => dish.id === this.state.selectDish)[0]} />
 //                </div >
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
 
