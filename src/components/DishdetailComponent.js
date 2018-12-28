@@ -168,7 +168,7 @@ const Dishdetail = (props) => {
                     </Card>
                 </div>
                     <div className="col-12 col-md-5 m-1">
-                        <RenderComments comment={props.comment} addComment={props.addComment} dishId={props.dish.id} />
+                        <RenderComments comment={props.comment} addComment={props.postComment} dishId={props.dish.id} />
                 </div>
                 </div>
             </div>
