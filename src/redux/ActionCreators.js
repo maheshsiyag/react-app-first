@@ -1,5 +1,5 @@
 import * as ActionType from './ActionTypes';
-import { DISHES } from '../shared/dishes';
+//import { DISHES } from '../shared/dishes';
 import { baseUrl } from '../shared/baseUrl';
 import { fetch } from 'cross-fetch';
 
@@ -155,4 +155,87 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
         .then(response => response.json())
         .then(response => dispatch(addComment(response)))
         .catch(error => { console.log('post comments', error.message); alert('Your comment could not be posted\nError: ' + error.message); });
+};
+
+
+export const fetchLeaders = () => (dispatch) => {
+    dispatch(LeadersLoading(true));
+    return fetch(baseUrl + 'leaders')
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .then(leaders => dispatch(addLeaders(leaders)))
+        .catch(error => dispatch(LeadersFailed(error.message)));
+};
+
+export const LeadersLoading = () => ({
+    type: ActionType.LEADERS_LOADING
+});
+
+export const LeadersFailed = (errmess) => ({
+    type: ActionType.LEADERS_FAILED,
+    payload: errmess
+});
+
+export const addLeaders = (leaders) => ({
+    type: ActionType.ADD_LEADERS,
+    payload: leaders
+});
+
+
+export const postFeedback = (fname,lname,tel,email,agree,conttype,feedback) => (dispatch) => {
+
+    const newFeedback = {
+        firstname: fname,
+        lastname: lname,
+        telnum: tel,
+        email: email,
+        agree: agree,
+        contactType: conttype,
+        message: feedback
+    };
+    newFeedback.date = new Date().toISOString();
+    
+    return fetch(baseUrl + 'feedback', {
+        method: "POST",
+        body: JSON.stringify(newFeedback),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                throw error;
+            })
+        .then(response => response.json())
+        .then(response => dispatch(addFeedback(response)))
+        .catch(error => { console.log('post comments', error.message); alert('Your comment could not be posted\nError: ' + error.message); });
+};
+
+export const addFeedback = (feedback) => {
+    alert('Thank you for your feedback!\n' + JSON.stringify(feedback));
+    return {
+        type: ActionType.WASTE,
+        payload:''
+    }
 };

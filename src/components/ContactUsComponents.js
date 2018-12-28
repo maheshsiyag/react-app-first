@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Label, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Control, Form, Errors, actions } from 'react-redux-form';
+//import { Control, Form, Errors, actions } from 'react-redux-form';
+import { Control, Form, Errors } from 'react-redux-form';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -16,9 +17,8 @@ class Contact extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleSubmit(values) {
-        console.log(values);
-        //event.preventDefault();
         this.props.resetFeedbackForm();
+        this.props.postFeedback(values.firstname, values.lastname, values.telnum, values.email, values.agree, values.contactType, values.message);
     }
     render() {
         return (
@@ -162,8 +162,8 @@ class Contact extends Component {
                                 <Col md={{ size: 3, offset: 1 }}>
                                     <Control.select model=".contactType" name="contactType"
                                         className="form-control">
-                                        <option>Tel.</option>
-                                        <option>Email</option>
+                                        <option value="Tel.">Tel.</option>
+                                        <option value="Email">Email</option>
                                     </Control.select>
                                 </Col>
                             </Row>

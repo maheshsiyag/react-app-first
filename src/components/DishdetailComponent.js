@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -104,19 +105,23 @@ function RenderDish({ dish }) {
 }
 
 function RenderComments({ comment, addComment, dishId }) {
+    
     const cooms = comment.map((coment) => {
         return (
             <div key={coment.id} >
-                <li>{coment.comment}</li>
-                <li>-- {coment.author}, {moment(coment.date).format('MMM DD, YYYY')}</li>
+                <Fade in>
+                    <li>{coment.comment}</li>
+                    <li>-- {coment.author}, {moment(coment.date).format('MMM DD, YYYY')}</li>
+                </Fade>
             </div>
         );
     });
+        
     if (comment != null)
         return (
             <div>
                 <h4>Comments</h4>
-                <ul className="list-unstyled">{cooms}</ul>
+                <ul className="list-unstyled"><Stagger in>{cooms}</Stagger></ul>
                 <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         );
@@ -161,11 +166,17 @@ const Dishdetail = (props) => {
                 </div>
             </div>
             <div className="row">
-                <div className="col-12 col-md-5 m-1">
+                    <div className="col-12 col-md-5 m-1">
+                        <FadeTransform
+                            in
+                            transformProps={{
+                                exitTransform: 'scale(0.5) translateY(-50%)'
+                            }}>
                     <Card>
                             <CardImg src={baseUrl + props.dish.image} alt={props.dish.name} width="100%" />
                         <RenderDish dish={props.dish} />
-                    </Card>
+                            </Card>
+                        </FadeTransform>
                 </div>
                     <div className="col-12 col-md-5 m-1">
                         <RenderComments comment={props.comment} addComment={props.postComment} dishId={props.dish.id} />
