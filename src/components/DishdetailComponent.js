@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -162,7 +163,7 @@ const Dishdetail = (props) => {
             <div className="row">
                 <div className="col-12 col-md-5 m-1">
                     <Card>
-                        <CardImg src={props.dish.image} alt={props.dish.name} width="100%" />
+                            <CardImg src={baseUrl + props.dish.image} alt={props.dish.name} width="100%" />
                         <RenderDish dish={props.dish} />
                     </Card>
                 </div>
